@@ -1,7 +1,7 @@
 from flask_restful import Resource, abort, reqparse
 from slugify import slugify
 
-from models.todos import Todo
+from app.models import Todo
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, required=True, help='Todo name is required', location='json')
