@@ -1,4 +1,5 @@
 from db import db
+from .common.utils import bcrypt
 
 class Base(db.Model):
     __abstract__ = True
@@ -44,5 +45,34 @@ class Todo(Base):
         db.session.commit()
 
     def __repr__(self):
-        """ Return todo name wich represents the todo object """
+        """ Return todo name which represents the todo object """
         return "<Todo: {}>".format(self.name)
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    _password = db.Column(db.Binary(60), nullable=False)
+
+    def __init__(self, username, password):
+        self.username = username
+        self._password = bcrypt.generate_password_hash(password)
+
+    def json(self):
+        return {
+            'username': self.username,
+            'password': self._password
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_by_username(cls, username):
+        return cls.query.filter_by(username).first()
+
+    def __repr__(self):
+        """ Return username which represetns user object """
+        return "<User: {}".format(self.username)
