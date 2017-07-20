@@ -21,6 +21,7 @@ class Todo(Base):
     def json(self):
         """ Return object as json """
         return {
+            'slug': self.slug,
             'name': self.name,
             'description': self.description,
         }
