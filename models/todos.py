@@ -1,29 +1,26 @@
-from db import db
-
-class Base(db.Model):
-    __abstract__ = True
-
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    created_date = db.Column(db.DateTime, default=db.func.now())
-    updated_date = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
-
+from common.db import db
+from common.models import Base
 
 class Todo(Base):
     __tablename__ = 'todos'
 
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(255), default='')
+    slug = db.Column(db.String(100), unique=True)
 
-
-    def __init__(self, name, description):
+    def __init__(self, name, description, slug):
         """ Initialize Todo """
         self.name = name
         self.description = description
+        self.slug = slug
+
+    @classmethod
+    def get_by_slug(cls, slug):
+        return cls.query.filter_by(slug=slug).first()
 
     def json(self):
         """ Return object as json """
         return {
-            'id': self.id,
             'name': self.name,
             'description': self.description,
         }

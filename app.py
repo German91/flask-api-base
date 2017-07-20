@@ -7,7 +7,7 @@ from flask_script import Manager
 # local imports
 from resources.todos.routes import todos_api
 from instance.config import app_config
-from db import db
+from common.db import db
 
 # Configuration
 app = Flask(__name__, instance_relative_config=True)
